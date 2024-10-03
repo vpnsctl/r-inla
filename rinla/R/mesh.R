@@ -351,8 +351,8 @@ lines.inla.mesh.segment <- function(x, loc = NULL, col = NULL,
     "lines.inla.mesh.segment()",
     "fmesher::lines()"
   )) {
-    return(fmesher::lines(
-      x = x,
+    return(lines(
+      x = fmesher::fm_as_fm(x),
       add = add,
       loc = loc,
       col = col,
@@ -701,13 +701,8 @@ plot.inla.mesh <- function(x,
     return(fmesher::plot_rgl(
       x = fmesher::fm_as_fm(x),
       col = col,
-      color.axis = color.axis,
-      color.n = color.n,
-      color.palette = color.palette,
-      alpha = alpha,
       lwd = lwd,
       size = size,
-      specular = specular,
       draw.vertices = TRUE,
       draw.edges = TRUE,
       draw.faces = TRUE,
@@ -723,7 +718,7 @@ plot.inla.mesh <- function(x,
     "plot.inla.mesh()",
     "fmesher::plot()"
   )) {
-    fmesher::plot(
+    plot(
       x = fmesher::fm_as_fm(x),
       col = col,
       t.sub = t.sub,
