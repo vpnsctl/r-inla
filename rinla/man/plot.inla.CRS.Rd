@@ -76,7 +76,10 @@ if (require("sf") && require("sp")) {
 if (require("sf") && require("sp")) {
     oblique <- c(0, 45, 45, 0)
     for (projtype in c("longlat_norm", "lambert_norm", "mollweide_norm", "hammer_norm")) {
-        INLA:::plot.inla.CRS(fmesher::fm_CRS(projtype, oblique = oblique), main = paste("oblique", projtype))
+        INLA:::plot.inla.CRS(
+            fmesher::fm_CRS(projtype, oblique = oblique),
+            main = paste("oblique", projtype)
+        )
     }
 }
 }
