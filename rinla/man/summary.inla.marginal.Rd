@@ -4,7 +4,7 @@
 \alias{summary.inla.marginal}
 \title{Not yet in use}
 \usage{
-summary.inla.marginal(object, ...)
+\method{summary}{inla.marginal}(object, ...)
 }
 \arguments{
 \item{object, ...}{Not yet in use}

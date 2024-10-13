@@ -58,7 +58,7 @@ names(inla.wkt_predef())
 }
 \seealso{
 \code{sp::CRS()}, \code{\link[fmesher:fm_crs_wkt]{fmesher::fm_wkt()}},
-\code{\link[=plot.CRS]{plot.CRS()}}, \code{\link[=fmesher:fm_crs_is_identical]{fmesher:fm_crs_is_identical()}}
+\code{\link[=plot.CRS]{plot.CRS()}}, \code{\link[fmesher:fm_crs_is_identical]{fmesher::fm_crs_is_identical()}}
 }
 \author{
 Finn Lindgren \email{finn.lindgren@gmail.com}

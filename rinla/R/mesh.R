@@ -2508,7 +2508,10 @@ inla.delaunay <- function(loc, ...) {
 #' @examples
 #'
 #' loc <- matrix(c(0.1, 0.15), 1, 2)
-#' lattice <- inla.mesh.lattice(dims = c(10, 10))
+#' lattice <- inla.mesh.lattice(
+#'   seq(0, 1, length.out = 10),
+#'   seq(0, 1, length.out = 10)
+#' )
 #' mesh <- inla.mesh.create(loc = loc, lattice = lattice, extend = FALSE)
 #'
 #' vt <- which(inla.mesh.query(mesh,
@@ -2812,32 +2815,17 @@ print.summary.inla.mesh <- function(x, ...) {
 #'
 #' @description
 #' Calculate a lattice projection to/from an [inla.mesh()].
-#' Deprecated in favour of `fmesher::fm_evaluate()` and `fmesher::fm_evaluator()`.
+#' Deprecated in favour of [fmesher::fm_evaluate()] and
+#' [fmesher::fm_evaluator()].
 #'
 #' The call `inla.mesh.project(mesh, loc, field=..., ...)`, is a shortcut
-#' to inla.mesh.project(inla.mesh.projector(mesh, loc), field).
+#' to `inla.mesh.project(inla.mesh.projector(mesh, loc), field)`.
 #'
 #' @aliases inla.mesh.project inla.mesh.projector inla.mesh.projector.inla.mesh
 #' inla.mesh.project.inla.mesh inla.mesh.project.inla.mesh.projector
 #' inla.mesh.project.inla.mesh.1d inla.mesh.projector.inla.mesh.1d
-#' @param mesh An [inla.mesh()] or [inla.mesh.1d()] object.
-#' @param loc Projection locations.  Can be a matrix or a `SpatialPoints`
-#' or a `SpatialPointsDataFrame` object.
-#' @param lattice An [inla.mesh.lattice()] object.
-#' @param xlim X-axis limits for a lattice. For R2 meshes, defaults to covering
-#' the domain.
-#' @param ylim Y-axis limits for a lattice. For R2 meshes, defaults to covering
-#' the domain.
-#' @param dims Lattice dimensions.
-#' @param projector An `inla.mesh.projector` object.
-#' @param field Basis function weights, one per mesh basis function, describing
-#' the function to be avaluated at the projection locationssFunction values for
-#' on the mesh
-#' @param projection One of `c("default", "longlat", "longsinlat",
-#' "mollweide")`.
-#' @param crs An optional CRS or inla.CRS object associated with `loc`
-#' and/or `lattice`.
-#' @param \dots Additional arguments passed on to methods.
+#' @param \dots Arguments passed on to [fmesher::fm_evaluate()] and
+#' [fmesher::fm_evaluator()].
 #' @return For `inla.mesh.project(mesh, ...)`, a list with projection
 #' information.  For `inla.mesh.projector(mesh, ...)`, an
 #' `inla.mesh.projector` object.  For `inla.mesh.project(projector,

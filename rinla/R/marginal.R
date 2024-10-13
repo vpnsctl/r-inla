@@ -529,6 +529,9 @@ plot.inla.marginal <- function(x, y, ...) {
 #' 
 #' Method not yet in use
 #' 
+#' @usage
+#' \method{summary}{inla.marginal}(object, ...)
+#' 
 #' @param object,... Not yet in use
 #' 
 #' @keywords internal
