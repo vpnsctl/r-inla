@@ -135,7 +135,7 @@ inla.requires_PROJ6 <- function(fun) {
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' @examples
 #' \dontrun{
-#' if (interactive()) {
+#' if (require("sp", quietly = TRUE) && interactive()) {
 #'     s <- sp::SpatialPoints(matrix(1:6, 3, 2), proj4string = fmesher::fm_CRS("sphere"))
 #'     inla.sp_get_crs(s)
 #' }
@@ -208,9 +208,9 @@ inla.sp_get_crs <- function(x) {
 #' @seealso [inla.sp_get_crs()]
 #' @examples
 #' \dontrun{
-#' c1 <- fmesher::fm_CRS("globe")
+#' c1 <- fmesher::fm_crs("globe")
 #' inla.crs_get_lengthunit(c1)
-#' c2 <- inla.crs_set_lengthunit(c1, "km")
+#' c2 <- inla.crs_set_lengthunit(c1, "metre")
 #' inla.crs_get_lengthunit(c2)
 #' }
 #'
@@ -336,19 +336,16 @@ inla.crs_set_ellipsoid_radius <- function(crs, radius) {
 #'
 #' `inla.wkt_predef` returns a WKT2 string defining a projection
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
-#' @seealso [sp::CRS()], [crs_wkt()],
-#' [inla.sp_get_crs()] [plot.CRS()],
-#' [inla.identical.CRS()]
+#' @seealso `sp::CRS()`, [fmesher::fm_wkt()],
+#' [plot.CRS()], [fmesher:fm_crs_is_identical()]
 #' @examples
-#'
-#'
-#' if (require("sf") && require("sp")) {
-#'     crs1 <- fmesher::fm_CRS("longlat_globe")
-#'     crs2 <- fmesher::fm_CRS("lambert_globe")
-#'     crs3 <- fmesher::fm_CRS("mollweide_norm")
-#'     crs4 <- fmesher::fm_CRS("hammer_globe")
-#'     crs5 <- fmesher::fm_CRS("sphere")
-#'     crs6 <- fmesher::fm_CRS("globe")
+#' if (require("sf")) {
+#'     crs1 <- fmesher::fm_crs("longlat_globe")
+#'     crs2 <- fmesher::fm_crs("lambert_globe")
+#'     crs3 <- fmesher::fm_crs("mollweide_norm")
+#'     crs4 <- fmesher::fm_crs("hammer_globe")
+#'     crs5 <- fmesher::fm_crs("sphere")
+#'     crs6 <- fmesher::fm_crs("globe")
 #' }
 #' \dontrun{
 #' names(inla.wkt_predef())
@@ -893,20 +890,6 @@ inla.crs.bounds <- function(crs, warn.unknown = FALSE) {
     bounds
 }
 
-## TRUE/FALSE for points inside/outside projection domain.
-inla.crs.bounds.check <- function(x, bounds) {
-    inla.require.inherits(x, "matrix")
-    if (all(is.finite(bounds$xlim)) && all(is.finite(bounds$ylim))) {
-        (sp::point.in.polygon(
-            x[, 1], x[, 2],
-            bounds$polygon[, 1], bounds$polygon[, 2]
-        )
-        > 0)
-    } else {
-        ok <- rep(TRUE, nrow(x))
-    }
-}
-
 
 
 
@@ -1045,6 +1028,7 @@ inla.sp2segment <-
 #### Methods with no fm_* replacements ####
 
 internal.clip <- function(bounds, coords, eps = 0.05) {
+    stopifnot(requireNamespace("sp"))
     ## Clip 2D coordinate matrix of polylines and generate a list of Line objects
     ## bounds is from inla.crs.bounds
     ## This implementation only removes "long" line segments.
@@ -1075,6 +1059,7 @@ internal.clip <- function(bounds, coords, eps = 0.05) {
 
 inla.crs.graticule <- function(x, by = c(15, 15, 45), add = FALSE, do.plot = TRUE,
                                eps = 0.05, ...) {
+    stopifnot(requireNamespace("sp"))
     # inla.fallback_PROJ6("inla.crs.graticule")
 
     ## Graticule
@@ -1273,6 +1258,7 @@ inla.crs.graticule <- function(x, by = c(15, 15, 45), add = FALSE, do.plot = TRU
 
 inla.crs.tissot <- function(x, by = c(30, 30, 30), add = FALSE, do.plot = TRUE,
                             eps = 0.05, diff.eps = 1e-2, ...) {
+    stopifnot(requireNamespace("sp"))
     # inla.fallback_PROJ6("inla.crs.tissot")
 
     if (is.null(by)) {
@@ -1411,6 +1397,7 @@ plot.inla.CRS <- function(x, xlim = NULL, ylim = NULL,
                           add = FALSE,
                           eps = 0.05,
                           ...) {
+    stopifnot(requireNamespace("sp"))
     # inla.fallback_PROJ6("plot.inla.CRS")
 
     bounds <- inla.crs.bounds(x)

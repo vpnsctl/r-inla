@@ -12,27 +12,7 @@
 \usage{
 inla.mesh.project(...)
 
-\method{inla.mesh.project}{inla.mesh}(mesh, loc = NULL, field = NULL, crs = NULL, ...)
-
-\method{inla.mesh.project}{inla.mesh.1d}(mesh, loc, field = NULL, ...)
-
-\method{inla.mesh.project}{inla.mesh.projector}(projector, field, ...)
-
 inla.mesh.projector(...)
-
-\method{inla.mesh.projector}{inla.mesh}(
-  mesh,
-  loc = NULL,
-  lattice = NULL,
-  xlim = NULL,
-  ylim = NULL,
-  dims = c(100, 100),
-  projection = NULL,
-  crs = NULL,
-  ...
-)
-
-\method{inla.mesh.projector}{inla.mesh.1d}(mesh, loc = NULL, xlim = mesh$interval, dims = 100, ...)
 }
 \arguments{
 \item{\dots}{Additional arguments passed on to methods.}
@@ -41,15 +21,6 @@ inla.mesh.projector(...)
 
 \item{loc}{Projection locations.  Can be a matrix or a \code{SpatialPoints}
 or a \code{SpatialPointsDataFrame} object.}
-
-\item{field}{Basis function weights, one per mesh basis function, describing
-the function to be avaluated at the projection locationssFunction values for
-on the mesh}
-
-\item{crs}{An optional CRS or inla.CRS object associated with \code{loc}
-and/or \code{lattice}.}
-
-\item{projector}{An \code{inla.mesh.projector} object.}
 
 \item{lattice}{An \code{\link[=inla.mesh.lattice]{inla.mesh.lattice()}} object.}
 
@@ -61,7 +32,16 @@ the domain.}
 
 \item{dims}{Lattice dimensions.}
 
+\item{projector}{An \code{inla.mesh.projector} object.}
+
+\item{field}{Basis function weights, one per mesh basis function, describing
+the function to be avaluated at the projection locationssFunction values for
+on the mesh}
+
 \item{projection}{One of \code{c("default", "longlat", "longsinlat", "mollweide")}.}
+
+\item{crs}{An optional CRS or inla.CRS object associated with \code{loc}
+and/or \code{lattice}.}
 }
 \value{
 For \code{inla.mesh.project(mesh, ...)}, a list with projection

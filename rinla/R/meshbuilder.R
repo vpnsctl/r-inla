@@ -2081,6 +2081,7 @@ meshbuilder.app <- function() {
 meshbuilder <- function() {
     inla.require("fields", stop.on.error = TRUE)
     inla.require("shiny", stop.on.error = TRUE)
-
+    inla.require("sp", stop.on.error = TRUE)
+    
     shiny::runApp(meshbuilder.app())
 }
