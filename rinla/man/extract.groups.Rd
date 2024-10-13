@@ -6,8 +6,6 @@
 \title{Extract tagged boundary/internal segments.}
 \usage{
 extract.groups(segm, groups, groups.new = groups, ...)
-
-\method{extract.groups}{inla.mesh.segment}(segm, groups, groups.new = groups, ...)
 }
 \arguments{
 \item{segm}{An \code{\link[=inla.mesh.segment]{inla.mesh.segment()}} object.}

@@ -1082,11 +1082,9 @@ extract.groups <- function(segm, groups, groups.new = groups, ...) {
     return(fmesher::fm_segm(fmesher::fm_as_fm(segm), grp = groups))
   }
 
-  UseMethod("extract.groups")
+  extract.groups.inla.mesh.segment(segm, groups, groups.new, ...)
 }
 
-#' @export
-#' @rdname extract.groups
 extract.groups.inla.mesh.segment <- function(segm,
                                              groups,
                                              groups.new = groups,
