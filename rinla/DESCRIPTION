@@ -30,6 +30,7 @@ Imports:
     withr,
     MatrixModels
 Suggests:
+    compositions,
     Deriv,
     Ecdat,
     HKprocess,
@@ -39,6 +40,7 @@ Suggests:
     doParallel,
     dplyr,
     evd,
+    fastGHQuad,
     fields,
     ggplot2,
     gsl,
