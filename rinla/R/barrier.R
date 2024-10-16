@@ -253,9 +253,9 @@
             px <- mesh$graph$tv[tri, ]
             temp <- mesh$loc[px, ] # is a 3 by 3 matrix of node locations
             poly.list <-
-                c(poly.list, Polygon(rbind(temp[c(3,2,1), 1:2], temp[3, 1:2]), hole = FALSE))
+                c(poly.list, sp::Polygon(rbind(temp[c(3,2,1), 1:2], temp[3, 1:2]), hole = FALSE))
         }
-        mesh.polys <- SpatialPolygons(list(Polygons(poly.list, ID = "noid")))
+        mesh.polys <- sp::SpatialPolygons(list(sp::Polygons(poly.list, ID = "noid")))
         if (interactive() &&
             compareVersion(getNamespaceVersion("sf"), "1.0-10") < 0) {
             warning(

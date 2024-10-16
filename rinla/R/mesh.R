@@ -1478,7 +1478,7 @@ inla.mesh.create <- function(loc = NULL, tv = NULL,
       if (inherits(loc, "SpatialPoints") ||
         inherits(loc, "SpatialPointsDataFrame")) {
         loc <- fm_transform(
-          coordinates(loc),
+          sp::coordinates(loc),
           crs0 = fmesher::fm_CRS(loc),
           crs = crs,
           passthrough = TRUE
@@ -2151,7 +2151,7 @@ inla.mesh.2d <- function(loc = NULL, ## Points to include in final triangulation
     (inherits(loc, "SpatialPoints") ||
       inherits(loc, "SpatialPointsDataFrame"))) {
     loc <- fm_transform(
-      coordinates(loc),
+      sp::coordinates(loc),
       crs0 = fm_CRS(loc),
       crs = crs,
       passthrough = TRUE
@@ -2161,7 +2161,7 @@ inla.mesh.2d <- function(loc = NULL, ## Points to include in final triangulation
     (inherits(loc.domain, "SpatialPoints") ||
       inherits(loc.domain, "SpatialPointsDataFrame"))) {
     loc.domain <- fm_transform(
-      coordinates(loc.domain),
+      sp::coordinates(loc.domain),
       crs0 = fm_CRS(loc.domain),
       crs = crs,
       passthrough = TRUE
@@ -2460,7 +2460,7 @@ inla.delaunay <- function(loc, ...) {
     (inherits(loc, "SpatialPoints") ||
       inherits(loc, "SpatialPointsDataFrame"))) {
     crs <- inla.sp_get_crs(loc)
-    loc <- coordinates(loc)
+    loc <- sp::coordinates(loc)
   } else {
     crs <- NULL
   }
@@ -4935,7 +4935,7 @@ inla.nonconvex.hull.basic <- function(points, convex = -0.15, resolution = 40, e
     (inherits(points, "SpatialPoints") ||
       inherits(points, "SpatialPointsDataFrame"))) {
     points <- fm_transform(
-      coordinates(points),
+      sp::coordinates(points),
       crs0 = inla.sp_get_crs(points),
       crs = crs,
       passthrough = TRUE

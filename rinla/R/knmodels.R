@@ -57,7 +57,7 @@
 #' 
 #' ### define space domain as a grid
 #' grid <- SpatialGrid(GridTopology(c(0,0), c(1, 1), c(4, 5)))
-#' (n <- nrow(xy <- coordinates(grid)))
+#' (n <- nrow(xy <- sp::coordinates(grid)))
 #' 
 #' ### build a spatial neighborhood list
 #' jj <- lapply(1:n, function(i)
