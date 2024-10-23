@@ -4829,6 +4829,40 @@ int testit(int argc, char **argv)
 	}
 		break;
 		
+	case 153: 
+	{
+		double mi = 0.33, mj = 0.44, Sii = 0.55,  Sij = 0.66,  Sjj = 0.88;
+		int ord = 5;
+
+
+		for(int i = 1; i <= 2*ord; i++) {
+			printf("E(x^%1d) =  %.12f\n", i, GMRFLib_noncentral_moment(i, 0, mi, 0.0, Sii, 0.0, 0.0));
+		}
+
+		for(int i = 1; i <= ord; i++) {
+			for(int j = 1; j <= ord; j++) {
+				printf("E(x^%1d * y^%1d) =  %.12f\n", i, j,
+				       GMRFLib_noncentral_moment(i, j, mi, mj, Sii, Sij, Sjj));
+			}
+		}
+
+		mi = mj = 0.0;
+		for(int i = 1; i <= 2*ord; i++) {
+			printf("DIFF E(x^%1d) =  %.12f\n", i,
+			       GMRFLib_noncentral_moment(i, 0, mi, 0.0, Sii, 0.0, 0.0) -
+			       GMRFLib_central_moment(i, 0, Sii, 0.0, 0.0));
+		}
+
+		for(int i = 1; i <= ord; i++) {
+			for(int j = 1; j <= ord; j++) {
+				printf("DIFF E(x^%1d * y^%1d) =  %.12f\n", i, j,
+				       GMRFLib_noncentral_moment(i, j, mi, mj, Sii, Sij, Sjj) -
+				       GMRFLib_central_moment(i, j, Sii, Sij, Sjj));
+			}
+		}
+	}
+	break;
+
 	case 999:
 	{
 		GMRFLib_pardiso_check_install(0, 0);

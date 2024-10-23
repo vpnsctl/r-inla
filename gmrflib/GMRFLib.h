@@ -140,6 +140,7 @@ void daxpby_(int *n, double *a, double *x, int *incx, double *b, double *y, int 
 #include "GMRFLib/version.h"
 #include "GMRFLib/hgmrfm.h"
 #include "GMRFLib/matern.h"
+#include "GMRFLib/moments.h"
 
 #if defined(INLA_WITH_MKL)
 void vdPowx(int n, const double *x, const double a, double *y);
