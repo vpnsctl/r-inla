@@ -4863,6 +4863,49 @@ int testit(int argc, char **argv)
 	}
 	break;
 
+	case 154: 
+	{
+		double skew = 0.54;
+		double *cx = GMRFLib_sn_g_get_coof(skew, NULL);
+		
+		P(skew);
+		P(GMRFLib_sn_g_eval(-1, cx));
+		P(GMRFLib_sn_g_eval_deriv(-1, cx));
+		P(GMRFLib_sn_g_eval(0, cx));
+		P(GMRFLib_sn_g_eval_deriv(0, cx));
+		P(GMRFLib_sn_g_eval(1, cx));
+		P(GMRFLib_sn_g_eval_deriv(1, cx));
+
+		skew = -skew;
+		GMRFLib_sn_g_get_coof(skew, cx);
+
+		printf("\n");
+		P(skew);
+		P(GMRFLib_sn_g_eval(-1, cx));
+		P(GMRFLib_sn_g_eval_deriv(-1, cx));
+		P(GMRFLib_sn_g_eval(0, cx));
+		P(GMRFLib_sn_g_eval_deriv(0, cx));
+		P(GMRFLib_sn_g_eval(1, cx));
+		P(GMRFLib_sn_g_eval_deriv(1, cx));
+	}
+	break;
+		
+	case 155: 
+	{
+		double skew = atof(args[0]);
+		P(skew);
+		
+		double *cx = GMRFLib_sn_g_get_coof(skew, NULL);
+		double *cy = GMRFLib_sn_g_get_coof(-skew, NULL);
+
+		for(double x = -6.0; x <= 6.0; x += 0.01) {
+			double z = GMRFLib_sn_g_eval(x, cx);
+			double zz = GMRFLib_sn_g_eval(z, cy);
+			printf("XX %f %f\n", x, zz);
+		}
+	}
+	break;
+		
 	case 999:
 	{
 		GMRFLib_pardiso_check_install(0, 0);

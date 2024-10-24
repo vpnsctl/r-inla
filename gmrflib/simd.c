@@ -292,16 +292,16 @@ void GMRFLib_sqr(int n, double *x, double *y)
 #if defined(INLA_WITH_MKL)
 	if (n < 96) {
 		_Pragma("omp simd")
-			for (int i = 0; i < n; i++) {
-				y[i] = SQR(x[i]); 
-			} 
+		    for (int i = 0; i < n; i++) {
+			y[i] = SQR(x[i]);
+		}
 	} else {
 		vdSqr(n, x, y);
 	}
 #else
 	_Pragma("omp simd")
 	    for (int i = 0; i < n; i++) {
-		    y[i] = SQR(x[i]);
+		y[i] = SQR(x[i]);
 	}
 #endif
 }

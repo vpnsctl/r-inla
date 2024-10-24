@@ -4664,19 +4664,19 @@ int GMRFLib_ai_vb_correct_mean_preopt(int thread_id,
 		int flag_cyclic = 0;
 		if (iter > 0) {
 			double mean_delta = 0.0;
-			for(int i = 0; i < (int) delta->size; i++) {
+			for (int i = 0; i < (int) delta->size; i++) {
 				mean_delta += SQR(gsl_vector_get(delta, i) + gsl_vector_get(delta_prev, i));
 			}
 			mean_delta = sqrt(mean_delta / delta->size);
 			if (mean_delta < FLT_EPSILON) {
 				// take the half and then exit later
 				flag_cyclic = 1;
-				for(int i = 0; i < (int) delta->size; i++) {
+				for (int i = 0; i < (int) delta->size; i++) {
 					gsl_vector_set(delta, i, 0.5 * gsl_vector_get(delta, i));
 				}
 			}
 		}
-		
+
 		gsl_blas_dgemv(CblasNoTrans, one, M, delta, zero, delta_mu);
 		err_dx = 0.0;
 		for (int i = 0; i < graph->n; i++) {
@@ -4709,10 +4709,13 @@ int GMRFLib_ai_vb_correct_mean_preopt(int thread_id,
 #pragma omp critical (Name_1169f76e685daed4d69fb5a745f9e95b4f5f633b)
 			{
 				if (delta_is_NAN) {
-					fprintf(stderr, "\n\n\t***[%1d] warning *** delta[%1d] is NAN, 'vb.correction' is aborted\n", thread_id, delta_is_NAN - 1);
+					fprintf(stderr, "\n\n\t***[%1d] warning *** delta[%1d] is NAN, 'vb.correction' is aborted\n", thread_id,
+						delta_is_NAN - 1);
 				}
 				if (diverge) {
-					fprintf(stderr, "\n\n\t***[%1d] warning *** iterative process seems to diverge, 'vb.correction' is aborted\n", thread_id);
+					fprintf(stderr,
+						"\n\n\t***[%1d] warning *** iterative process seems to diverge, 'vb.correction' is aborted\n",
+						thread_id);
 				}
 				if (max_corr_flag) {
 					fprintf(stderr, "\n\n\t***[%1d] warning *** max_correction = %.2f >= %.2f, 'vb.correction' is aborted\n",
@@ -4730,7 +4733,8 @@ int GMRFLib_ai_vb_correct_mean_preopt(int thread_id,
 					}
 					if (diverge) {
 						fprintf(fp,
-							"\n\n\t***[%1d] warning *** iterative process seems to diverge, 'vb.correction' is aborted\n", thread_id);
+							"\n\n\t***[%1d] warning *** iterative process seems to diverge, 'vb.correction' is aborted\n",
+							thread_id);
 					}
 					if (max_corr_flag) {
 						fprintf(fp, "\n\n\t*** warning *** max_correction = %.2f >= %.2f, 'vb.correction' is aborted\n",
