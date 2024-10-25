@@ -4896,12 +4896,13 @@ int testit(int argc, char **argv)
 		P(skew);
 		
 		double *cx = GMRFLib_sn_g_get_coof(skew, NULL);
-		double *cy = GMRFLib_sn_g_get_coof(-skew, NULL);
+		double *icx = GMRFLib_sn_ginv_get_coof(skew, NULL);
 
-		for(double x = -6.0; x <= 6.0; x += 0.01) {
-			double z = GMRFLib_sn_g_eval(x, cx);
-			double zz = GMRFLib_sn_g_eval(z, cy);
-			printf("XX %f %f\n", x, zz);
+		for(double x = -6; x <= 6; x += 0.01) {
+			double zx = GMRFLib_sn_g_eval(x, cx);
+			double izx = GMRFLib_sn_g_eval(x, icx);
+			double zz = GMRFLib_sn_g_eval(zx, icx);
+			printf("XX %f %f %f %f\n", x, zx, izx, zz);
 		}
 	}
 	break;
