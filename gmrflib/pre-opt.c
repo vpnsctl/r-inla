@@ -729,7 +729,7 @@ int GMRFLib_preopt_init(GMRFLib_preopt_tp **preopt, int npred, int nf, int **c, 
 		fprintf(stderr, "\n\t*** write graph to file [%s]\n", fnm);
 	}
 #endif
-	
+
 	(*preopt)->preopt_Qfunc = GMRFLib_preopt_Qfunc;
 	(*preopt)->preopt_Qfunc_arg = (void *) *preopt;
 	(*preopt)->gcpo_Qfunc = GMRFLib_preopt_gcpo_Qfunc;

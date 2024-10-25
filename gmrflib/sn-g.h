@@ -1,5 +1,5 @@
 
-/* moments.h
+/* sn-g.h
  * 
  * Copyright (C) 2024-2024 Havard Rue
  * 
@@ -29,8 +29,15 @@
  *
  */
 
-#ifndef __GMRFLib_MOMENTS_H__
-#define __GMRFLib_MOMENTS_H__
+/*!
+  \file utils.h
+  \brief Typedefs for \ref utils.c
+*/
+
+#ifndef __GMRFLib_SN_G_H__
+#define __GMRFLib_SN_G_H__
+
+#include <stdlib.h>
 
 #undef __BEGIN_DECLS
 #undef __END_DECLS
@@ -42,11 +49,14 @@
 #define __END_DECLS					       /* empty */
 #endif
 
-__BEGIN_DECLS
-// ...
-#include "GMRFLib/GMRFLib.h"
-double GMRFLib_noncentral_moment(int i, int j, double mi, double mj, double Sii, double Sij, double Sjj);
-double GMRFLib_central_moment(int i, int j, double Sii, double Sij, double Sjj);
+__BEGIN_DECLS int GMRFLib_sn_g_get_order(void);
+
+//
+double *GMRFLib_sn_g_get_coof(double skew, double *cx);
+double *GMRFLib_sn_ginv_get_coof(double skew, double *cx);
+double GMRFLib_sn_g_eval(double x, double *cx);
+double GMRFLib_sn_g_eval_deriv(double x, double *cx);
+//
 
 __END_DECLS
 #endif
