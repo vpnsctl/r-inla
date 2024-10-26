@@ -336,8 +336,8 @@ inla.crs_set_ellipsoid_radius <- function(crs, radius) {
 #'
 #' `inla.wkt_predef` returns a WKT2 string defining a projection
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
-#' @seealso `sp::CRS()`, [fmesher::fm_wkt()],
-#' [plot.CRS()], [fmesher::fm_crs_is_identical()]
+#' @seealso [fmesher::fm_crs()], [fmesher::fm_wkt()],
+#' [fmesher::fm_crs_is_identical()]
 #' @examples
 #' if (require("sf")) {
 #'     crs1 <- fmesher::fm_crs("longlat_globe")
