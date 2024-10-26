@@ -53,10 +53,10 @@
 #' or 4d, it also includes linear combinations summary.
 #' @author Elias T. Krainski
 #' @seealso [inla.knmodels.sample()] to sample from
-#' @examples
+#' @examplesIf require("sp")
 #' 
 #' ### define space domain as a grid
-#' grid <- SpatialGrid(GridTopology(c(0,0), c(1, 1), c(4, 5)))
+#' grid <- sp::SpatialGrid(sp::GridTopology(c(0,0), c(1, 1), c(4, 5)))
 #' (n <- nrow(xy <- sp::coordinates(grid)))
 #' 
 #' ### build a spatial neighborhood list
