@@ -195,7 +195,7 @@
 
 ##     cat('.no.of.t = ', .no.of.t, ', .no.of.s = ', .no.of.s, ', nst = ', nst, '\n', sep='')
     if (TRUE) { ## working in progress: identify need of constraints from the formula
-        etemp <- INLA:::inla.interpret.formula(formula, data, debug = FALSE)
+        etemp <- inla.interpret.formula(formula, data, debug = FALSE)
 ##        print(str(etemp))
         rterms <- attr(terms(etemp[[1]]), "term.labels")
         if(length(rterms)>0) {
