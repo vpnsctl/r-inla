@@ -433,13 +433,22 @@ inla.generate.colors <- function(color,
                                  color.palette = cm.colors,
                                  color.truncate = FALSE,
                                  alpha = NULL) {
-  fmesher_deprecate(
+  if (fmesher_deprecate(
     "soft",
     2L,
     "23.08.18",
     "inla.generate.colors()",
-    "fmesher:::generate_colors()"
-  )
+    "fmesher::fm_generate_colors()"
+  )) {
+    return(fmesher::fm_generate_colors(
+      color = color,
+      color.axis = color.axis,
+      color.n = color.n,
+      color.palette = color.palette,
+      color.truncate = color.truncate,
+      alpha = alpha
+    ))
+  }
 
   if (is.character(color)) {
     colors <- color
