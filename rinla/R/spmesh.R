@@ -1,6 +1,6 @@
 #' PROJ6 detection
 #'
-#' Detect whether PROJ6 is available for INLA. Deprecated and always returns `TRUE`..
+#' Detect whether PROJ6 is available for INLA. Deprecated and always returns `TRUE`.
 #'
 #' @aliases inla.has_PROJ6 inla.not_for_PROJ6 inla.not_for_PROJ4
 #' inla.fallback_PROJ6 inla.requires_PROJ6
@@ -123,8 +123,9 @@ inla.requires_PROJ6 <- function(fun) {
 #' @title Extract CRS information
 #'
 #' @description
-#' `r lifecycle::badge("deprecated")` in favour of `fmesher::fm_CRS()`.
-#' Wrapper for CRS(projargs) (PROJ4) and CRS(wkt) for `sp::Spatial`
+#' `r lifecycle::badge("deprecated")` Use `fmesher::fm_CRS()` instead.
+#'
+#' Wrapper for `CRS(projargs)` (PROJ4) and `CRS(wkt)` for `sp::Spatial`
 #' objects.
 #'
 #' This function is a convenience method to workaround PROJ4/PROJ6 differences,
@@ -321,6 +322,7 @@ inla.crs_set_ellipsoid_radius <- function(crs, radius) {
 #' @description
 #' `r lifecycle::badge("deprecated")` in favour of
 #' [fmesher::fm_CRS()]
+#'
 #' Creates either a CRS object or an inla.CRS object, describing a coordinate
 #' reference system.
 #'
@@ -403,10 +405,12 @@ inla.wkt_predef <- function() {
 
 
 
-#' Internal WKT handling
+#' @title Internal WKT handling
 #'
+#' @description
 #' `r lifecycle::badge("deprecated")` in favour of
 #' [fmesher::fm_wkt_as_wkt_tree()].
+#'
 #' Conversion between WKT and a tree representation
 #'
 #'
@@ -794,100 +798,14 @@ inla.crs_projection_type <- function(crs) {
 ## +proj=moll in (-2,2)x(-1,1) scaled by +a and +b, and +units
 ## +proj=lambert in (-pi,pi)x(-1,1) scaled by +a and +b, and +units
 inla.crs.bounds <- function(crs, warn.unknown = FALSE) {
-    if (fmesher_deprecate(
+    fmesher_deprecate(
         "soft",
         2L,
         when = "23.08.18",
         what = "inla.crs.bounds()",
         with = "fmesher::fm_crs_bounds()"
-    )) {
-        return(fmesher::fm_crs_bounds(crs, warn.unknown = warn.unknown))
-    }
-
-    wkt <- inla.crs_get_wkt(crs)
-    wt <- inla.as.wkt_tree.wkt(wkt)
-    type <- inla.wkt_tree_projection_type(wt)
-
-    if (is.null(type)) {
-        if (inla.wkt_is_geocent(wkt)) {
-            bounds <-
-                list(
-                    type = "rectangle",
-                    xlim = c(-Inf, Inf),
-                    ylim = c(-Inf, Inf)
-                )
-        } else {
-            if (warn.unknown) {
-                warning(
-                    "Could not determine shape of transformation bounds. Using infinite rectangle."
-                )
-            }
-            bounds <-
-                list(
-                    type = "rectangle",
-                    xlim = c(-Inf, Inf),
-                    ylim = c(-Inf, Inf)
-                )
-        }
-    } else if (type %in% c("longlat")) {
-        bounds <-
-            list(
-                type = "rectangle",
-                xlim = c(-180, 180),
-                ylim = c(-90, 90)
-            )
-    } else if (type == "lambert") {
-        axis <- c(pi, 1)
-        radius <- inla.wkt_get_ellipsoid_radius(wkt)
-        axis[1] <- axis[1] * radius
-        # TODO: handle eccentricity
-        axis[2] <- axis[2] * sqrt(radius) * sqrt(radius)
-        # TODO: Handle units"
-        bounds <- list(
-            type = "rectangle",
-            xlim = c(-1, 1) * axis[1],
-            ylim = c(-1, 1) * axis[2]
-        )
-    } else if (type %in% c("mollweide", "hammer")) {
-        axis <- c(2, 1)
-        center <- c(0, 0)
-        radius <- inla.wkt_get_ellipsoid_radius(wkt)
-        axis[1] <- axis[1] * radius / sqrt(1 / 2)
-        axis[2] <- axis[2] * radius / sqrt(1 / 2)
-        # TODO: Handle "units"
-        bounds <- list(
-            type = "ellipse",
-            axis = axis,
-            center = center,
-            xlim = center[1] + c(-1, 1) * axis[1],
-            ylim = center[2] + c(-1, 1) * axis[2]
-        )
-    } else if (type == "tmerc") {
-        bounds <-
-            list(
-                type = "rectangle",
-                xlim = c(-Inf, Inf),
-                ylim = c(-Inf, Inf)
-            )
-    } else {
-        stop("'inla.crs.bounds' internal error: transformation detected but not handled.")
-    }
-
-    if (bounds$type == "rectangle") {
-        bounds$polygon <- cbind(
-            bounds$xlim[c(1, 2, 2, 1, 1)],
-            bounds$ylim[c(1, 1, 2, 2, 1)]
-        )
-    } else if (bounds$type == "ellipse") {
-        theta <- seq(0, 2 * pi, length.out = 1000)
-        bounds$polygon <- cbind(
-            bounds$center[1] + bounds$axis[1] * cos(theta),
-            bounds$center[2] + bounds$axis[2] * sin(theta)
-        )
-    } else {
-        stop("Unknown transformation type. This should not happen.")
-    }
-    bounds
+    )
+    return(fmesher::fm_crs_bounds(crs, warn.unknown = warn.unknown))
 }
 
 
@@ -896,7 +814,11 @@ inla.crs.bounds <- function(crs, warn.unknown = FALSE) {
 
 
 
-#' Test CRS and inla.CRS for equality
+#' @title Test CRS and inla.CRS for equality
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")` Use [fmesher::fm_crs_is_identical()]
+#' instead.
 #'
 #' Wrapper for identical, optionally testing only the CRS part of two objects
 #' Deprecated in favour of [fmesher::fm_crs_is_identical()]
@@ -921,9 +843,11 @@ inla.identical.CRS <- function(...) {
 
 
 
-#' Wrapper method for `fmesher::fm_transform`
+#' @title Wrapper method for `fmesher::fm_transform`
 #'
+#' @description
 #' `r lifecycle::badge("deprecated")` in favour of [fmesher::fm_transform()].
+#'
 #' Handles transformation of various inla objects according to coordinate
 #' reference systems of `sf::crs`, `sp::CRS` or `inla.CRS` class.
 #'

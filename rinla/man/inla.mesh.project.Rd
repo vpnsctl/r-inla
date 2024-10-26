@@ -25,9 +25,10 @@ information.  For \code{inla.mesh.projector(mesh, ...)}, an
 the projector object.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Use \code{\link[fmesher:fm_evaluate]{fmesher::fm_evaluate()}} and
+\code{\link[fmesher:fm_evaluate]{fmesher::fm_evaluator()}} instead.
+
 Calculate a lattice projection to/from an \code{\link[=inla.mesh]{inla.mesh()}}.
-Deprecated in favour of \code{\link[fmesher:fm_evaluate]{fmesher::fm_evaluate()}} and
-\code{\link[fmesher:fm_evaluate]{fmesher::fm_evaluator()}}.
 
 The call \code{inla.mesh.project(mesh, loc, field=..., ...)}, is a shortcut
 to \code{inla.mesh.project(inla.mesh.projector(mesh, loc), field)}.

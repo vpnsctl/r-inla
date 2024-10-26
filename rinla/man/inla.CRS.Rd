@@ -30,6 +30,7 @@ object}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} in favour of
 \code{\link[fmesher:fm_CRS_sp]{fmesher::fm_CRS()}}
+
 Creates either a CRS object or an inla.CRS object, describing a coordinate
 reference system.
 }
