@@ -4903,6 +4903,7 @@ int testit(int argc, char **argv)
 			double izx = GMRFLib_sn_g_eval(x, icx);
 			double zz = GMRFLib_sn_g_eval(zx, icx);
 			printf("XX %f %f %f %f\n", x, zx, izx, zz);
+			printf("YY %f %f %f\n", x, zx, izx);
 		}
 	}
 	break;
