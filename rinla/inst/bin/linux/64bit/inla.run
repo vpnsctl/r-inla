@@ -65,6 +65,15 @@ if [ -n "${INLA_DEBUG}" ]; then
     echo "*** $0 *** LD_PRELOAD=$LD_PRELOAD"
     echo "*** $0 *** LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
     ldd -r "$DIR/$prog"
+
+    for arg in "$@"; do
+	if [ -r "$arg" ]; then
+	    echo -e "\n*** FILE $arg:"
+	    grep ^### "$arg" 
+	    echo -e "*** END OF FILE $arg:\n"
+	fi
+    done
+
 fi
 
 ## set default levels for nested openmp

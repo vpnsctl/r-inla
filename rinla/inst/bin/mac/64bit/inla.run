@@ -98,6 +98,15 @@ if [ "${INLA_DEBUG}XX" != "XX" ]; then
 
     p="/usr/bin/sw_vers"
     test -x $p && $p
+
+    for arg in "$@"; do
+	if [ -r "$arg" ]; then
+	    echo -e "\n*** FILE $arg:"
+	    grep ^### "$arg" 
+	    echo -e "*** END OF FILE $arg:\n"
+	fi
+    done
+
 fi
 
 nproc=$(sysctl -n hw.ncpu)
