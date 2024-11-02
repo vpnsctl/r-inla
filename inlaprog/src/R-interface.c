@@ -74,11 +74,17 @@ __END_DECLS
 #include "R-interface.h"
 static int R_init = 1;
 static int R_debug = 0;
+static char *R_home = NULL;
 double R_rgeneric_cputime = 0.0;
 
 #if !defined(_OPENMP)
 #error "OpenMP must be enabled."
 #endif
+
+void inla_set_R_home(char *home) 
+{
+	R_home = (home ? Strdup(home) : NULL);
+}
 
 #if defined(INLA_WITH_LIBR)
 
@@ -185,6 +191,7 @@ int inla_R_exit_(void)
 		R_rgeneric_cputime = 0.0;
 		R_init = 1;
 		R_debug = 0;
+		R_home = NULL;
 	}
 
 	return INLA_OK;
@@ -199,7 +206,7 @@ int inla_R_init_(void)
 				R_debug = (getenv((const char *) "INLA_DEBUG_R") ? 1 : 0);
 
 				// Check if R_HOME is set. If not, try to guess it, otherwise fail.
-				char *rhome = getenv((const char *) "R_HOME");
+				char *rhome = (R_home ? R_home : getenv((const char *) "R_HOME"));
 				if (!rhome || (rhome && (my_dir_exists(rhome) != INLA_OK))) {
 					if (my_dir_exists("/Library/Frameworks/R.framework/Resources") == INLA_OK) {
 						GMRFLib_sprintf(&rhome, "R_HOME=/Library/Frameworks/R.framework/Resources");
@@ -224,7 +231,10 @@ int inla_R_init_(void)
 					fprintf(stderr, "*** R-interface WARNING: Set it to a _GUESSED_ value [%s]\n\n", rhome);
 					fflush(stderr);
 					my_setenv(rhome, 0);
-					Free(rhome);
+				} else {
+					char *rrhome = NULL;
+					GMRFLib_sprintf(&rrhome, "R_HOME=%s", rhome);
+					my_setenv(rrhome, 0);
 				}
 
 				char *Rargv[4];
