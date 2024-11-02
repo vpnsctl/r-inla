@@ -184,6 +184,7 @@ int inla_R_exit_(void)
 		Rf_endEmbeddedR(0);
 		R_rgeneric_cputime = 0.0;
 		R_init = 1;
+		R_debug = 0;
 	}
 
 	return INLA_OK;
