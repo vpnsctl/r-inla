@@ -207,8 +207,10 @@ int inla_R_init_(void)
 						GMRFLib_sprintf(&rhome, "R_HOME=/usr/lib64/R");
 					} else if (my_dir_exists("/usr/lib/R") == INLA_OK) {
 						GMRFLib_sprintf(&rhome, "R_HOME=/usr/lib/R");
-					} else if (my_dir_exists("/usr/lib32/R") == INLA_OK) {
-						GMRFLib_sprintf(&rhome, "R_HOME=/usr/lib32/R");
+					} else if (my_dir_exists("/usr/local/lib64/R") == INLA_OK) {
+						GMRFLib_sprintf(&rhome, "R_HOME=/usr/local/lib64/R");
+					} else if (my_dir_exists("/usr/local/lib/R") == INLA_OK) {
+						GMRFLib_sprintf(&rhome, "R_HOME=/usr/local/lib/R");
 					} else {
 						fprintf(stderr, "\n\n");
 						fprintf(stderr, "*** R-interface  ERROR: Environment variable R_HOME is not set or invalid.\n");
