@@ -258,6 +258,7 @@ int inla_R_init_(void)
 				close(fd);
 				FILE *fp = fopen(filename, "w");
 				if (R_debug) {
+					fprintf(fp, "base::searchpaths()\n");
 					fprintf(fp, "utils::sessionInfo()\n");
 				}
 				fprintf(fp, "%s <- function(cmd, model, theta = NULL) INLA::%s(cmd, model, theta)\n",
