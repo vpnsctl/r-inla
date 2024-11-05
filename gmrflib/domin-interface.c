@@ -1399,31 +1399,27 @@ int GMRFLib_gsl_optimize(GMRFLib_ai_param_tp *ai_par)
 
 void GMRFLib_opt_trace_append(GMRFLib_opt_trace_tp **otrace, double f, double *theta, int nfunc)
 {
-// this function is only called from within a critical region already
-//#pragma omp critical (Name_22185a97af1d08a4ff94565b2dbc850c1489063f)
-	{
-		int size_alloc = 64;
-		if (!*otrace) {
-			*otrace = Calloc(1, GMRFLib_opt_trace_tp);
-			(*otrace)->nt = G.nhyper;
-			(*otrace)->niter = 0;
-			(*otrace)->nalloc = size_alloc;
-			(*otrace)->f = Calloc((*otrace)->nalloc, double);
-			(*otrace)->nfunc = Calloc((*otrace)->nalloc, int);
-			(*otrace)->theta = Calloc(G.nhyper * (*otrace)->nalloc, double);
-		}
-
-		if ((*otrace)->niter >= (*otrace)->nalloc) {
-			(*otrace)->nalloc += size_alloc;
-			(*otrace)->f = Realloc((*otrace)->f, (*otrace)->nalloc, double);
-			(*otrace)->nfunc = Realloc((*otrace)->nfunc, (*otrace)->nalloc, int);
-			(*otrace)->theta = Realloc((*otrace)->theta, (*otrace)->nalloc * (*otrace)->nt, double);
-		}
-		Memcpy((*otrace)->f + (*otrace)->niter, &f, sizeof(double));
-		Memcpy((*otrace)->nfunc + (*otrace)->niter, &nfunc, sizeof(int));
-		Memcpy((*otrace)->theta + (*otrace)->niter * (*otrace)->nt, theta, (*otrace)->nt * sizeof(double));
-		(*otrace)->niter++;
+	int size_alloc = 64;
+	if (!*otrace) {
+		*otrace = Calloc(1, GMRFLib_opt_trace_tp);
+		(*otrace)->nt = G.nhyper;
+		(*otrace)->niter = 0;
+		(*otrace)->nalloc = size_alloc;
+		(*otrace)->f = Calloc((*otrace)->nalloc, double);
+		(*otrace)->nfunc = Calloc((*otrace)->nalloc, int);
+		(*otrace)->theta = Calloc(G.nhyper * (*otrace)->nalloc, double);
 	}
+
+	if ((*otrace)->niter >= (*otrace)->nalloc) {
+		(*otrace)->nalloc += size_alloc;
+		(*otrace)->f = Realloc((*otrace)->f, (*otrace)->nalloc, double);
+		(*otrace)->nfunc = Realloc((*otrace)->nfunc, (*otrace)->nalloc, int);
+		(*otrace)->theta = Realloc((*otrace)->theta, (*otrace)->nalloc * (*otrace)->nt, double);
+	}
+	Memcpy((*otrace)->f + (*otrace)->niter, &f, sizeof(double));
+	Memcpy((*otrace)->nfunc + (*otrace)->niter, &nfunc, sizeof(int));
+	Memcpy((*otrace)->theta + (*otrace)->niter * (*otrace)->nt, theta, (*otrace)->nt * sizeof(double));
+	(*otrace)->niter++;
 }
 
 void GMRFLib_opt_trace_free(GMRFLib_opt_trace_tp *otrace)
