@@ -1320,7 +1320,7 @@ int GMRFLib_Qx2(int thread_id, double *result, double *x, GMRFLib_graph_tp *grap
 
 	max_t = IMAX(GMRFLib_openmp->max_threads_inner, GMRFLib_openmp->max_threads_outer);
 	assert(result);
-	Memset(result, 0, graph->n * sizeof(double));
+	GMRFLib_fill(graph->n, 0.0, result); 
 
 	int m = GMRFLib_align(1 + GMRFLib_graph_max_nnbs(graph), sizeof(double));
 	Calloc_init(m + (!diag ? graph->n : 0), 2);
@@ -1338,9 +1338,8 @@ int GMRFLib_Qx2(int thread_id, double *result, double *x, GMRFLib_graph_tp *grap
 			}
 #define CODE_BLOCK							\
 			for (int i = 0; i < graph->n; i++) {		\
-				result[i] += (Qfunc(thread_id, i, i, NULL, Qfunc_arg) + diag[i]) * x[i]; \
+				double sum = (Qfunc(thread_id, i, i, NULL, Qfunc_arg) + diag[i]) * x[i]; \
 				int *j_a = graph->nbs[i];		\
-				double sum = 0.0;			\
 				for (int jj = 0; jj < graph->nnbs[i]; jj++) { \
 					int j = j_a[jj];		\
 					sum += Qfunc(thread_id, i, j, NULL, Qfunc_arg) * x[j]; \
@@ -1379,21 +1378,18 @@ int GMRFLib_Qx2(int thread_id, double *result, double *x, GMRFLib_graph_tp *grap
 			char *used = Calloc(max_t, char);
 #define CODE_BLOCK							\
 			for (int i = 0; i < graph->n; i++) {		\
-				double *r = NULL, *local_values = NULL, xi = x[i], sum = 0.0; \
+				double *r = NULL, *local_values = NULL, xi = x[i]; \
 				int *j_a = graph->lnbs[i];		\
 				/* may run in serial */			\
 				int tnum = (nt__ > 1 ? omp_get_thread_num() : 0); \
-									\
 				used[tnum] = 1;				\
 				r = local_result + tnum * n1;		\
 				local_values = CODE_BLOCK_WORK_PTR_x(0, tnum);	\
 				Qfunc(thread_id, i, -1, local_values, Qfunc_arg); \
-				r[i] += (local_values[0] + diag[i]) * xi; \
-									\
+				double sum = (local_values[0] + diag[i]) * xi; \
 				for (int jj = 0; jj < graph->lnnbs[i]; jj++) { \
 					int j = j_a[jj];		\
 					double lval = local_values[jj+1]; \
-									\
 					sum += lval * x[j];		\
 					r[j] += lval * xi;		\
 				}					\
