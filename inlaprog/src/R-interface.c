@@ -81,7 +81,7 @@ double R_rgeneric_cputime = 0.0;
 #error "OpenMP must be enabled."
 #endif
 
-void inla_set_R_home(char *home) 
+void inla_set_R_home(char *home)
 {
 	R_home = (home ? Strdup(home) : NULL);
 }

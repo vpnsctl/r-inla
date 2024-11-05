@@ -711,7 +711,7 @@ int GMRFLib_graph_prepare(GMRFLib_graph_tp *graph)
 
 	graph->max_nnbs = -1;
 	graph->max_nnbs = GMRFLib_graph_max_nnbs(graph);
-	
+
 	return GMRFLib_SUCCESS;
 }
 
@@ -1308,7 +1308,7 @@ int GMRFLib_Qx2(int thread_id, double *result, double *x, GMRFLib_graph_tp *grap
 
 	max_t = IMAX(GMRFLib_openmp->max_threads_inner, GMRFLib_openmp->max_threads_outer);
 	assert(result);
-	GMRFLib_fill(graph->n, 0.0, result); 
+	GMRFLib_fill(graph->n, 0.0, result);
 
 	int m = GMRFLib_align(1 + GMRFLib_graph_max_nnbs(graph), sizeof(double));
 	Calloc_init(m + (!diag ? graph->n : 0), 2);
