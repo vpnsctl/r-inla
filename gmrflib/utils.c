@@ -2237,10 +2237,10 @@ double GMRFLib_erfc_inv(double x)
 
 size_t GMRFLib_align(size_t n, size_t size)
 {
-	// return 'N >= n' so that the endpoint is aligned at GMRFLib_MEM_ALIGN bits boundary with an added buffer of GMRFLib_L1_CACHELINE bits.
-	// GMRFLib_L1_CACHELINE/size must be an integer
+	// return 'N >= n' so that the endpoint is aligned at GMRFLib_MEM_ALIGN bits boundary with an added buffer of GMRFLib_CACHELINESIZE bits.
+	// GMRFLib_CACHELINESIZE/size must be an integer
 
-	int m = GMRFLib_L1_CACHELINE / size;
+	int m = GMRFLib_CACHELINESIZE / size;
 	int mm = GMRFLib_MEM_ALIGN / size;
 	div_t d = div(n, mm);
 
@@ -2267,4 +2267,5 @@ size_t GMRFLib_align_simple(size_t n, size_t size)
 		fprintf(stderr, "\nADD CODE HERE\n");
 		assert(0 == 1);
 	}
+
 }

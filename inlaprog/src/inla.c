@@ -6636,6 +6636,8 @@ int main(int argc, char **argv)
 	my_sort2_id_test_cutoff(0);
 	my_sort2_dd_test_cutoff(0);
 
+	GMRFLib_cachelinesize = GMRFLib_get_cachelinesize();
+	
 	/*
 	 * special option: if one of the arguments is `--ping', then just return INLA[<VERSION>] IS ALIVE 
 	 */
