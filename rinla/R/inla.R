@@ -2118,7 +2118,7 @@
             } else if (inla.os("windows")) {
                 if (!remote && !submit) {
                     ## need to set these variables here 
-                    Sys.setenv(MIMALLOC_ARENA_EAGER_COMMIT=1, MIMALLOC_PURGE_DELAY=1000, MIMALLOC_PURGE_DECOMMITS=0)
+                    Sys.setenv(MIMALLOC_ARENA_EAGER_COMMIT=1, MIMALLOC_PURGE_DELAY=-1, MIMALLOC_PURGE_DECOMMITS=0)
                     if (verbose) {
                         echoc <- try(system2(inla.call,
                                              args = paste(all.args, shQuote(file.ini)),
