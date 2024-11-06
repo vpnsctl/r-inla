@@ -70,8 +70,6 @@ static fncall_timing_tp fncall_timing = {
 };
 
 static GMRFLib_opt_trace_tp *opt_trace = NULL;
-static unsigned char LOCK_latent = 0;
-static unsigned char LOCK_hyper = 0;
 
 int GMRFLib_opt_setup(double ***hyperparam, int nhyper,
 		      GMRFLib_ai_log_extra_tp *log_extra, void *log_extra_arg,
@@ -120,7 +118,8 @@ int GMRFLib_opt_setup(double ***hyperparam, int nhyper,
 	G.ai_store = ai_store;
 	G.d_idx = d_idx;
 
-	LOCK_latent = LOCK_hyper = 0;
+	B.f_best_latent = Calloc(1+G.graph->n, double);
+	B.f_best_x = Calloc(1+G.nhyper, double);
 
 	return GMRFLib_SUCCESS;
 
@@ -142,52 +141,63 @@ int GMRFLib_opt_reset_directions(void)
 
 int GMRFLib_opt_get_latent(double *latent)
 {
-	if (latent) {
-		while (LOCK_latent == 1);
-		Memcpy(latent, B.f_best_latent, G.graph->n * sizeof(double));
-	}
-
-	return GMRFLib_SUCCESS;
+	return (GMRFLib_opt_setget_latent(latent, -1));
 }
 
 int GMRFLib_opt_set_latent(double *latent)
 {
-	if (latent) {
-		LOCK_latent = 1;
-#pragma omp critical (Name_4149e7648e6459ac6ca0a7925146ec4c473ad0ca)
-		{
-			if (!B.f_best_latent) {
-				B.f_best_latent = Calloc(G.graph->n, double);
-			}
-			Memcpy(B.f_best_latent, latent, G.graph->n * sizeof(double));
-		}
-		LOCK_latent = 0;
+	return (GMRFLib_opt_setget_latent(latent, 1));
+}
+
+int GMRFLib_opt_setget_latent(double *latent, int setget)
+{
+	// setget >= 0 : set
+	// setget < 0 : get
+	
+	if (!latent || !B.f_best_latent)  {
+		return GMRFLib_SUCCESS;
 	}
+	
+#pragma omp critical (Name_4149e7648e6459ac6ca0a7925146ec4c473ad0ca)
+	{
+		if (setget >= 0) {
+			Memcpy(B.f_best_latent, latent, G.graph->n * sizeof(double));
+		} else {
+			Memcpy(latent, B.f_best_latent, G.graph->n * sizeof(double));
+		}
+	}
+
 	return GMRFLib_SUCCESS;
 }
 
 int GMRFLib_opt_get_hyper(double *x)
 {
-	if (x) {
-		while (LOCK_hyper == 1);
-		Memcpy(x, B.f_best_x, G.nhyper * sizeof(double));
-	}
-	return GMRFLib_SUCCESS;
+	return (GMRFLib_opt_setget_hyper(x, -1));
 }
 
 int GMRFLib_opt_set_hyper(double *x)
 {
-	if (x) {
-		LOCK_hyper = 1;
-#pragma omp critical (Name_d3cc86b5243044ce1bb31daf3268917d0599d98e)
-		{
-			if (!B.f_best_x) {
-				B.f_best_x = Calloc(G.nhyper, double);
-			}
-			Memcpy(B.f_best_x, x, G.nhyper * sizeof(double));
-		}
-		LOCK_hyper = 0;
+	return (GMRFLib_opt_setget_hyper(x, 1));
+}
+
+int GMRFLib_opt_setget_hyper(double *x, int setget)
+{
+	// setget >= 0 : set
+	// setget < 0 : get
+	
+	if (!x || !B.f_best_x) {
+		return GMRFLib_SUCCESS;
 	}
+
+#pragma omp critical (Name_d3cc86b5243044ce1bb31daf3268917d0599d98e)
+	{
+		if (setget >= 0) {
+			Memcpy(B.f_best_x, x, G.nhyper * sizeof(double));
+		} else {
+			Memcpy(x, B.f_best_x, G.nhyper * sizeof(double));
+		}
+	}
+
 	return GMRFLib_SUCCESS;
 }
 
@@ -201,6 +211,7 @@ int GMRFLib_opt_exit(void)
 	opt_setup = 0;
 	Memset(&G, 0, sizeof(GMRFLib_opt_arg_tp));
 	Memset(&B, 0, sizeof(Best_tp));
+	
 	// we want to keep the directions. if the dimension changes then we reset... see below
 	if (0) {
 		Memset(&Opt_dir_params, 0, sizeof(opt_dir_params_tp));
@@ -362,6 +373,7 @@ int GMRFLib_opt_f_intern(int thread_id,
 			B.f_best = fx_local;
 			GMRFLib_opt_set_hyper(x);
 			GMRFLib_opt_set_latent(ais->mode);
+
 			if (debug) {
 				printf("\t%d: set: B.f_best %.12g fx %.12g\n", omp_get_thread_num(), B.f_best, fx_local);
 			}
