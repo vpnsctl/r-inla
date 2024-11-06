@@ -2687,21 +2687,16 @@ formals(inla.core) <- formals(inla.core.safe) <- formals(inla)
 }
 
 `inla.set.environment` <- function() {
-    mlib <- inla.getOption("malloc.lib")
-    if (mlib == "compiler") mlib <- NULL
-
     ## define some environment variables 
     vars <- list(
         INLA_PATH = system.file("bin", package = "INLA"),
         INLA_OS = inla.os.type(),
         INLA_VERSION = inla.version("version"),
-        INLA_RVERSION = paste0(
-            R.Version()$major, ".",
-            strsplit(R.Version()$minor, "[.]")[[1]][1]
-        ),
-        INLA_RHOME = R.home(),
-        INLA_MALLOC_LIB = mlib
+        INLA_RVERSION = R.Version()$version.string, 
+        INLA_RHOME = R.home()
     )
+    mlib <- inla.getOption("malloc.lib")
+    if (mlib != "compiler") vars$INLA_MALLOC_LIB <- mlib
     do.call("Sys.setenv", vars)
     return (invisible())
 }
