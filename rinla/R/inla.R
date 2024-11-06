@@ -2117,6 +2117,8 @@
                 inla.inlaprogram.timeout(timeout.used, timeout)
             } else if (inla.os("windows")) {
                 if (!remote && !submit) {
+                    ## need to set these variables here 
+                    Sys.setenv(MIMALLOC_ARENA_EAGER_COMMIT=1, MIMALLOC_PURGE_DELAY=1000, MIMALLOC_PURGE_DECOMMITS=0)
                     if (verbose) {
                         echoc <- try(system2(inla.call,
                                              args = paste(all.args, shQuote(file.ini)),
@@ -2127,6 +2129,8 @@
                                              stdout = file.log, stderr = file.log2,
                                              wait = TRUE, timeout = timeout))
                     }
+                    ## and unset them here 
+                    Sys.unsetenv("MIMALLOC_ARENA_EAGER_COMMIT", "MIMALLOC_PURGE_DELAY", "MIMALLOC_PURGE_DECOMMITS")
                     timeout.used <- Sys.time() - timeout.used
                     inla.inlaprogram.timeout(timeout.used, timeout)
                     if (echoc != 0L) {
@@ -2683,6 +2687,9 @@ formals(inla.core) <- formals(inla.core.safe) <- formals(inla)
 }
 
 `inla.set.environment` <- function() {
+    mlib <- inla.getOption("malloc.lib")
+    if (mlib == "compiler") mlib <- NULL
+
     ## define some environment variables 
     vars <- list(
         INLA_PATH = system.file("bin", package = "INLA"),
@@ -2692,8 +2699,8 @@ formals(inla.core) <- formals(inla.core.safe) <- formals(inla)
             R.Version()$major, ".",
             strsplit(R.Version()$minor, "[.]")[[1]][1]
         ),
-        INLA_RHOME = Sys.getenv("R_HOME"),
-        INLA_MALLOC_LIB = inla.getOption("malloc.lib")
+        INLA_RHOME = R.home(),
+        INLA_MALLOC_LIB = mlib
     )
     do.call("Sys.setenv", vars)
     return (invisible())

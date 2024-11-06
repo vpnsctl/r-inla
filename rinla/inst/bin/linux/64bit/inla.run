@@ -53,7 +53,14 @@ if [ -n "${INLA_MALLOC_LIB}" ]; then
     fi
     case "$LD_PRELOAD" in
 	*libjemalloc*) 
-	    export MALLOC_CONF='abort_conf:true,background_thread:true,metadata_thp:always';;
+	    export MALLOC_CONF='abort_conf:true,background_thread:true,metadata_thp:always'
+	    ;;
+	*libmimalloc*) 
+	    ## https://microsoft.github.io/mimalloc/environment.html
+	    export MIMALLOC_ARENA_EAGER_COMMIT=1 
+	    export MIMALLOC_PURGE_DELAY=1000 
+	    export MIMALLOC_PURGE_DECOMMITS=0
+	    ;;
     esac
 fi
 
