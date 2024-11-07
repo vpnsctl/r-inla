@@ -733,6 +733,10 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 		order[1 + i + n] = i + n;
 	}
 
+	double *early_local_latent = Calloc(G.graph->n, double);
+	double *early_local_hyper = Calloc(n, double);
+	double early_local_value = NAN;
+	
 #pragma omp parallel for num_threads(GMRFLib_openmp->max_threads_outer)
 	for (int ii = 0; ii < 2 * n + 1; ii++) {
 		int i = order[ii], j;
@@ -780,17 +784,19 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 			ff = f0;
 		}
 
-		if (EARLY_STOP_ENABLED) {
-			continue;
-		}
-
 		if (CHECK_FOR_EARLY_STOP) {
 			if (!ISNAN(f0) && (f0 > ff) && !early_stop) {
 #pragma omp critical (Name_e0ed3c765687be9d1ec160f8bcb4d241de5c3a06)
 				if (!ISNAN(f0) && (f0 > ff) && !early_stop) {
 					if (G.ai_par->fp_log || debug)
 						fprintf((G.ai_par->fp_log ? G.ai_par->fp_log : stderr),
-							"enable early_stop ff < f0: %f < %f (diff %g)\n", ff, f0, f0 - ff);
+							"\nEnable early_stop ff < f0: %f < %f (diff %g)\n", ff, f0, f0 - ff);
+
+					if (ISNAN(early_local_value) || (ff < early_local_value)) {
+						Memcpy(early_local_latent, ais->mode, G.graph->n * sizeof(double));
+						Memcpy(early_local_hyper, xx_hold[i], n * sizeof(double));
+						early_local_value = ff;
+					}
 					early_stop = 1;
 				}
 			}
@@ -800,11 +806,21 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 
 	if (early_stop) {
 		if (G.ai_par->fp_log)
-			fprintf(G.ai_par->fp_log, "(I) Early stop. Mode not found sufficiently accurate f0=[ %.8g] f_best=[ %.8g]\n\n", f0, B.f_best);
+			fprintf(G.ai_par->fp_log, "\nEarly stop. Mode not found sufficiently accurate f0=[%.6f] f_best=[%.6f] local.value=[%.6f]\n\n",
+				f0, B.f_best, early_local_value);
 
 		if (G.ai_par->mode_restart) {
-			GMRFLib_opt_get_hyper(x);
+			if (early_local_value != B.f_best) {
+				// we are unable to reproduce the current 'f_best'. we need to reset the 'f_best', and restart from there
+				if (G.ai_par->fp_log)
+					fprintf(G.ai_par->fp_log, "\nReset 'best' as we are unable to reproduce it: [%.6f] --> [%.6f]\n\n",
+						B.f_best, early_local_value);
+				B.f_best = early_local_value;
+				GMRFLib_opt_set_hyper(early_local_hyper);
+				GMRFLib_opt_set_latent(early_local_latent);
+			}
 			*log_dens_mode = -B.f_best;
+			GMRFLib_opt_get_hyper(x);
 			GMRFLib_opt_get_latent(G.ai_store->mode);
 		}
 		// return a quasi-estimate of the Hessian, which may or may not be useful
@@ -820,6 +836,7 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 			hessian[i + i * n] = (f1[i] - 2 * f0 + fm1[i]) / SQR(h);
 		}
 
+		early_stop = 0;
 		double f_best_save = B.f_best;
 		if (!G.ai_par->hessian_force_diagonal) {
 			typedef struct {
@@ -837,8 +854,7 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 				}
 			}
 
-			early_stop = 0;
-			int enable_early_stop = 1;	       /* this must be enabled for early_stop to work here */
+			int enable_early_stop = 0;	       /* this must be enabled for early_stop to work here */
 #pragma omp parallel for num_threads(GMRFLib_openmp->max_threads_outer)
 			for (int k = 0; k < nn; k++) {
 				int thread_id = omp_get_thread_num();
@@ -873,7 +889,7 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 				GMRFLib_opt_get_latent(ais->mode);
 				if (G.ai_par->hessian_forward_finite_difference) {
 					F2(f11, ii, h, jj, h);
-					if (CHECK_FOR_EARLY_STOP && (f11 < 0) && !early_stop && enable_early_stop) {
+					if (CHECK_FOR_EARLY_STOP && (f11 < f0) && !early_stop && enable_early_stop) {
 						if (G.ai_par->fp_log || debug)
 							fprintf((G.ai_par->fp_log ? G.ai_par->fp_log : stderr),
 								"enable early_stop f11 < f0: %f < %f (diff %f)\n", f11, f0, f0 - f11);
@@ -975,6 +991,8 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 		}
 	}
 	Free(ai_store);
+	Free(early_local_hyper);
+	Free(early_local_latent);
 
 #undef EARLY_STOP_ENABLED
 #undef CHECK_FOR_EARLY_STOP

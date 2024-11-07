@@ -2130,7 +2130,7 @@
                                              wait = TRUE, timeout = timeout))
                     }
                     ## and unset them here 
-                    Sys.unsetenv("MIMALLOC_ARENA_EAGER_COMMIT", "MIMALLOC_PURGE_DELAY", "MIMALLOC_PURGE_DECOMMITS")
+                    Sys.unsetenv(c("MIMALLOC_ARENA_EAGER_COMMIT", "MIMALLOC_PURGE_DELAY", "MIMALLOC_PURGE_DECOMMITS"))
                     timeout.used <- Sys.time() - timeout.used
                     inla.inlaprogram.timeout(timeout.used, timeout)
                     if (echoc != 0L) {
