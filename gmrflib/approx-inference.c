@@ -1477,10 +1477,17 @@ int GMRFLib_ai_INLA_experimental(GMRFLib_density_tp ***density,
 					if (log_dens_mode_save > log_dens_mode && stupid_mode_iter > ai_par->stupid_search_max_iter) {
 						if (ai_par->fp_log) {
 							fprintf(stderr,
-								"\n\n*** Mode is not accurate yet but we have reached the rounding error level. Break.\n\n");
+								"\n\n*** Mode is not accurate yet but we have reached the rounding error level. Break\n");
 						}
 						break;
 					}
+
+					if (log_dens_mode_save == log_dens_mode) {
+						if (ai_par->fp_log) {
+							fprintf(stderr, "\n\n*** Hessian failed but no better mode found\n");
+						}
+					}
+
 					// printf("%.12g %.12g\n", log_dens_mode_save, log_dens_mode);
 					log_dens_mode_save = log_dens_mode;
 

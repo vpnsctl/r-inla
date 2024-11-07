@@ -799,8 +799,8 @@ int GMRFLib_opt_estimate_hessian(double *hessian, double *x, double *log_dens_mo
 	Free(order);
 
 	if (early_stop) {
-		if (debug)
-			fprintf(stderr, "(I) Early stop. Mode not found sufficiently accurate f0=[ %.8g] f_best=[ %.8g]\n\n", f0, B.f_best);
+		if (G.ai_par->fp_log)
+			fprintf(G.ai_par->fp_log, "(I) Early stop. Mode not found sufficiently accurate f0=[ %.8g] f_best=[ %.8g]\n\n", f0, B.f_best);
 
 		if (G.ai_par->mode_restart) {
 			GMRFLib_opt_get_hyper(x);
