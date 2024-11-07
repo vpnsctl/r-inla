@@ -13,51 +13,29 @@
 #' Constructs `inla.mesh.segment` objects that can be used to specify
 #' boundary and interior constraint edges in calls to [inla.mesh()].
 #'
-#' @param loc Matrix of point locations, or `SpatialPoints`, or `sf`/`sfc` point
-#' object.
-#' @param idx Segment index sequence vector or index pair matrix.  The indices
-#' refer to the rows of `loc`.  If `loc==NULL`, the indices will be
-#' interpreted as indices into the point specification supplied to
-#' [inla.mesh.create()].  If `is.bnd==TRUE`, defaults to linking
-#' all the points in `loc`, as `c(1:nrow(loc),1L)`, otherwise
-#' `1:nrow(loc)`.
-#' @param grp Vector of group labels for each segment.  Set to `NULL` to
-#' let the labels be chosen automatically in a call to
-#' [inla.mesh.create()].
-#' @param is.bnd `TRUE` if the segments are boundary segments, otherwise
-#' `FALSE`.
-#' @param grp.default When joining segments, use this group label for segments
-#' that have `grp=NULL`.
-#' @param x,y,z,nlevels,levels Parameters specifying a set of surface contours,
-#' with syntax described in [contour()].
-#' @param groups Vector of group ID:s, one for each contour level.
-#' @param positive `TRUE` if the contours should encircle positive level
-#' excursions in a counter clockwise direction.
-#' @param eps Tolerance for [inla.simplify.curve()].
-#' @param crs An optional `CRS` or `inla.CRS` object
-#' @param ...  Additional parameters.  When joining segments, a list of
-#' `inla.mesh.segment` objects.
-#' @return An `inla.mesh.segment` object.
+#' @param ...  Parameters passed on to [fmesher::fm_segm()] and other
+#' replacement `fmesher` functions.
+#' @return An `fm_segm` object.
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' @seealso [inla.mesh.create()], [inla.mesh.2d()]
 #' @examples
-#'
+#' require("fmesher")
 #' ## Create a square boundary and a diagonal interior segment
 #' loc.bnd <- matrix(c(0, 0, 1, 0, 1, 1, 0, 1), 4, 2, byrow = TRUE)
 #' loc.int <- matrix(c(0.9, 0.1, 0.1, 0.6), 2, 2, byrow = TRUE)
-#' segm.bnd <- inla.mesh.segment(loc.bnd)
-#' segm.int <- inla.mesh.segment(loc.int, is.bnd = FALSE)
+#' segm.bnd <- fm_segm(loc.bnd)
+#' segm.int <- fm_segm(loc.int, is.bnd = FALSE)
 #'
 #' ## Points to be meshed
 #' loc <- matrix(runif(10 * 2), 10, 2) * 0.9 + 0.05
-#' mesh <- inla.mesh.create(loc,
+#' mesh <- fm_rcdt_2d_inla(loc,
 #'   boundary = segm.bnd,
 #'   interior = segm.int,
 #'   refine = list()
 #' )
 #' plot(mesh)
 #'
-#' mesh <- inla.mesh.create(loc, interior = fm_segm_join(segm.bnd, segm.int))
+#' mesh <- fm_rcdt_2d_inla(loc, interior = fm_segm_join(segm.bnd, segm.int))
 #' plot(mesh)
 #'
 #' @export inla.mesh.segment
@@ -1736,12 +1714,8 @@ inla.mesh.1d.fem <- function(mesh) {
 #' inla.diameter.inla.mesh.segment inla.diameter.inla.mesh.lattice
 #' inla.diameter.inla.mesh.1d
 #' @param x A point set as an \eqn{n\times d}{n x d} matrix, or an
-#' `inla.mesh` related object.
-#' @param manifold Character string specifying the manifold type. Default is to
-#' treat the point set with Euclidean \eqn{R^d} metrics. Use
-#' `manifold="S2"` for great circle distances on the unit sphere (this is
-#' set automatically for `inla.mesh` objects).
-#' @param \dots Additional parameters passed on to other methods.
+#' fmesher::fm_mesh_2d()] related object.
+#' @param \dots Additional parameters passed on to [fmesher::fm_diameter()].
 #' @return A scalar, upper bound for the diameter of the convex hull of the
 #' point set.
 #' @author Finn Lindgren <finn.lindgren@@gmail.com>
@@ -1868,15 +1842,7 @@ inla.simplify.curve <- function(loc, idx, eps) {
 #' @export
 #' @describeIn inla.mesh.segment `r lifecycle::badge("deprecated")` Use
 #'   [fmesher::fm_segm_contour_helper()] instead.
-inla.contour.segment <- function(x = seq(0, 1, length.out = nrow(z)),
-                                 y = seq(0, 1, length.out = ncol(z)),
-                                 z,
-                                 nlevels = 10,
-                                 levels = pretty(range(z, na.rm = TRUE), nlevels),
-                                 groups = seq_len(length(levels)),
-                                 positive = TRUE,
-                                 eps = NULL,
-                                 crs = NULL) {
+inla.contour.segment <- function(...) {
   fmesher_deprecate(
     "soft",
     2L,
@@ -1885,15 +1851,7 @@ inla.contour.segment <- function(x = seq(0, 1, length.out = nrow(z)),
     "fmesher::fm_segm_contour_helper()"
   )
   return(fmesher::fm_segm_contour_helper(
-    x = x,
-    y = y,
-    z = z,
-    nlevels = nlevels,
-    levels = levels,
-    groups = groups,
-    positive = positive,
-    eps = eps,
-    crs = crs
+    ...
   ))
 }
 
