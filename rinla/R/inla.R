@@ -2118,7 +2118,11 @@
             } else if (inla.os("windows")) {
                 if (!remote && !submit) {
                     ## need to set these variables here 
-                    Sys.setenv(MIMALLOC_ARENA_EAGER_COMMIT=1, MIMALLOC_PURGE_DELAY=-1, MIMALLOC_PURGE_DECOMMITS=0)
+                    Sys.setenv(
+                        MIMALLOC_ARENA_EAGER_COMMIT = 1,
+                        MIMALLOC_PURGE_DELAY = -1,
+                        MIMALLOC_PURGE_DECOMMITS = 0
+                    )
                     if (verbose) {
                         echoc <- try(system2(inla.call,
                                              args = paste(all.args, shQuote(file.ini)),
@@ -2130,7 +2134,13 @@
                                              wait = TRUE, timeout = timeout))
                     }
                     ## and unset them here 
-                    Sys.unsetenv(c("MIMALLOC_ARENA_EAGER_COMMIT", "MIMALLOC_PURGE_DELAY", "MIMALLOC_PURGE_DECOMMITS"))
+                    Sys.unsetenv(
+                        c(
+                            "MIMALLOC_ARENA_EAGER_COMMIT",
+                            "MIMALLOC_PURGE_DELAY",
+                            "MIMALLOC_PURGE_DECOMMITS"
+                        )
+                    )
                     timeout.used <- Sys.time() - timeout.used
                     inla.inlaprogram.timeout(timeout.used, timeout)
                     if (echoc != 0L) {
