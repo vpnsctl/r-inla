@@ -2703,10 +2703,9 @@ formals(inla.core) <- formals(inla.core.safe) <- formals(inla)
         INLA_OS = inla.os.type(),
         INLA_VERSION = inla.version("version"),
         INLA_RVERSION = R.Version()$version.string, 
-        INLA_RHOME = R.home()
+        INLA_RHOME = R.home(),
+        INLA_MALLOC_LIB = inla.getOption("malloc.lib")
     )
-    mlib <- inla.getOption("malloc.lib")
-    if (mlib != "compiler") vars$INLA_MALLOC_LIB <- mlib
     do.call("Sys.setenv", vars)
     return (invisible())
 }
