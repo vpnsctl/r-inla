@@ -10361,8 +10361,8 @@
                     ),
                     survival = FALSE,
                     discrete = TRUE,
-                    link = c("default", "logit"), 
-                    link.simple = c("default", "logit"), 
+                    link = c("default", "logit", "cloglog"), 
+                    link.simple = c("default", "logit", "cloglog"), 
                     pdf = "occupancy"
                 ), 
 

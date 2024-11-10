@@ -12380,8 +12380,8 @@
 #'               \item{doc = }{\verb{Occupancy likelihood}}
 #'               \item{survival = }{\verb{FALSE}}
 #'               \item{discrete = }{\verb{TRUE}}
-#'               \item{link = }{\verb{default logit}}
-#'               \item{link.simple = }{\verb{default logit}}
+#'               \item{link = }{\verb{default logit cloglog}}
+#'               \item{link.simple = }{\verb{default logit cloglog}}
 #'               \item{pdf = }{\verb{occupancy}}
 #'              }
 #'            }
