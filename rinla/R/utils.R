@@ -1142,11 +1142,7 @@
     if (length(idx) == 0) {
         idx <- which(Q@i < Q@j)
     }
-    if (min(c(Q@i, Q@j)) == 0 || max(c(Q@i, Q@j)) == n-1) {
-        off <- 1L
-    } else {
-        off <- 0L
-    }
+    off <- if (min(c(Q@i, Q@j)) == 0 || max(c(Q@i, Q@j)) == n-1) 1L else 0L
     c1 <- c(n, Q@i[-idx] + off, Q@i[idx] + off)
     c2 <- c(n, Q@j[-idx] + off, Q@j[idx] + off)
     c3 <- c(NA, Q@x[-idx], Q@x[idx])
