@@ -1135,18 +1135,20 @@
 
 `inla.sparse.write.mtx` <- function(Q, filename = "sparse.matrix.mtx")
 {
+    ## assume Q is symmetric
     Q <- as(Q, "TsparseMatrix")
     n <- nrow(Q)
 
-    idx <- which(Q@i > Q@j)
-    if (length(idx) == 0) {
-        idx <- which(Q@i < Q@j)
+    idx.eq <- which(Q@i == Q@j)
+    idx.lower <- which(Q@i > Q@j)
+    if (length(idx.lower) == 0) {
+        Q <- t(Q)
+        idx.lower <- which(Q@i > Q@j)
     }
     off <- if (min(c(Q@i, Q@j)) == 0 || max(c(Q@i, Q@j)) == n-1) 1L else 0L
-    c1 <- c(n, Q@i[-idx] + off, Q@i[idx] + off)
-    c2 <- c(n, Q@j[-idx] + off, Q@j[idx] + off)
-    c3 <- c(NA, Q@x[-idx], Q@x[idx])
-    c3[1] <- length(c3) - 1L
+    c1 <- c(n, Q@i[idx.eq] + off, Q@i[idx.lower] + off)
+    c2 <- c(n, Q@j[idx.eq] + off, Q@j[idx.lower] + off)
+    c3 <- c(length(c2) - 1L, Q@x[idx.eq], Q@x[idx.lower])
     
     V <- cbind(c1, c2, c3)
     opt <- options()
