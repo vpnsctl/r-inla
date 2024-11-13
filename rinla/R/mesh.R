@@ -1686,14 +1686,22 @@ inla.mesh.1d.A <- function(mesh, loc,
     "inla.mesh.1d.A()",
     "fmesher::fm_basis()"
   )
-  return(fmesher::fm_basis(
-    fmesher::fm_as_mesh_1d(mesh),
-    loc,
-    weights = weights,
-    derivatives = derivatives,
-    method = method
-  ))
-}
+  if (is.null(method)) {
+    return(fmesher::fm_basis(
+      fmesher::fm_as_mesh_1d(mesh),
+      loc,
+      weights = weights,
+      derivatives = derivatives
+    ))
+  } else {
+    return(fmesher::fm_basis(
+      fmesher::fm_as_mesh_1d(mesh),
+      loc,
+      weights = weights,
+      derivatives = derivatives,
+      method = method
+    ))
+  }
 
 #' @param mesh An inla.mesh.1d object
 #' @export
