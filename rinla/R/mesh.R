@@ -1622,23 +1622,34 @@ inla.mesh.1d <- function(loc,
 #' Use [fmesher::fm_bary()] instead.
 inla.mesh.1d.bary <- function(mesh, loc, method = c("linear", "nearest")) {
   fmesher_deprecate(
-    "soft",
+    "warn",
     2L,
     "23.08.18",
     "inla.mesh.1d.bary()",
     "fmesher::fm_bary()",
     details =
       c(
-        "An `index` field his being included for backwards compatibility.",
-        "The canconical element from `fm_bary()` is `t`."
+        "From fmesher 0.2.0.9001, fmesher::fm_bary() returns a special fm_bary object.",
+        "inla.mesh.1d.bary returns the old format."
       )
   )
+  mesh <- fmesher::fm_as_mesh_1d(mesh)
   result <- fmesher::fm_bary(
-    fmesher::fm_as_mesh_1d(mesh),
+    mesh,
     loc,
     method = method
   )
-  result$index <- result$t
+  if (package_version(utils::packageVersion("fmesher")) <= "0.2.0.9000") {
+    result$index <- result$t
+    return(result)
+  }
+  # Convert to old format
+  index <- fmesher::fm_bary_simplex(mesh, result)
+  result <- list(
+    index = index,
+    t = index,
+    bary = result$bary
+  )
   return(result)
 }
 
@@ -1669,7 +1680,7 @@ inla.mesh.1d.A <- function(mesh, loc,
                            derivatives = NULL,
                            method = NULL) {
   fmesher_deprecate(
-    "soft",
+    "warn",
     2L,
     "23.08.18",
     "inla.mesh.1d.A()",
