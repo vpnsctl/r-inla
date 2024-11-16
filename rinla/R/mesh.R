@@ -520,12 +520,6 @@ extract.groups <- function(segm, groups, groups.new = groups, ...) {
   return(fmesher::fm_segm(fmesher::fm_as_fm(segm), grp = groups))
 }
 
-
-
-
-
-
-
 # Mesh creation ----
 
 inla.mesh <- function(...) {
@@ -539,8 +533,6 @@ inla.mesh <- function(...) {
   stop("'inla.mesh(...)' is deprecated.  Use 'fmesher::fm_mesh_2d_inla(...)' instead.")
   return(inla.mesh.create(...))
 }
-
-
 
 
 #' @title Low level function for high-quality triangulations
@@ -674,8 +666,6 @@ inla.mesh.create <- function(loc = NULL, tv = NULL,
     crs = crs
   ))
 }
-
-
 
 #' @title Constraint segment extraction for inla.mesh
 #'
@@ -909,9 +899,6 @@ inla.delaunay <- function(loc, ...) {
 }
 
 
-
-
-
 # Queries ----
 
 
@@ -1086,8 +1073,6 @@ inla.mesh.query <- function(mesh, ...) {
   return(result)
 }
 
-
-
 #' Summarizing triangular mesh objects
 #'
 #' Construct and print `inla.mesh` object summaries
@@ -1236,7 +1221,6 @@ print.summary.inla.mesh <- function(x, ...) {
 }
 
 
-
 # Point/mesh connection methods ####
 
 #' @title Methods for projecting to/from an inla.mesh
@@ -1288,7 +1272,6 @@ inla.mesh.project <- function(...) {
   return(fmesher::fm_evaluate(...))
 }
 
-
 #' @export
 #' @rdname inla.mesh.project
 inla.mesh.projector <- function(...) {
@@ -1300,8 +1283,6 @@ inla.mesh.projector <- function(...) {
   )
   return(fmesher::fm_evaluator(...))
 }
-
-
 
 
 # Misc ####
@@ -1384,7 +1365,6 @@ inla.mesh.basis <- function(mesh,
   )
 }
 
-
 inla.parse.queries <- function(...) {
   queries <- list(...)
   if (length(queries) == 0) {
@@ -1417,7 +1397,6 @@ inla.parse.queries <- function(...) {
 
   return(queries)
 }
-
 
 #' @title Compute various mesh related quantities.
 #'
@@ -1565,7 +1544,6 @@ inla.parse.queries <- function(...) {
   return(output)
 }
 
-
 # 1D mesh creation ----
 
 
@@ -1654,7 +1632,6 @@ inla.mesh.1d.bary <- function(mesh, loc, method = c("linear", "nearest")) {
 }
 
 
-
 #' @title Mapping matrix for 1D meshes
 #'
 #' @description
@@ -1702,6 +1679,7 @@ inla.mesh.1d.A <- function(mesh, loc,
       method = method
     ))
   }
+}
 
 #' @param mesh An inla.mesh.1d object
 #' @export
