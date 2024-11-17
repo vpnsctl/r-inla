@@ -2981,13 +2981,12 @@ int loglikelihood_occupancy(int thread_id, double *__restrict logll, double *__r
 	if (m == 0) {
 		return GMRFLib_SUCCESS;
 	}
-
 #if 0
 	// debug-code to check the likelihood
 	if (m != 99) {
 		double xx[99];
-		for(int i = 0; i < 99; i++) {
-			xx[i] = -4.0 + 8.0 * i/99.0;
+		for (int i = 0; i < 99; i++) {
+			xx[i] = -4.0 + 8.0 * i / 99.0;
 		}
 		double llxx[99];
 		loglikelihood_occupancy(thread_id, llxx, xx, 99, idx, NULL, NULL, arg, NULL);
@@ -2995,13 +2994,13 @@ int loglikelihood_occupancy(int thread_id, double *__restrict logll, double *__r
 		char *fnm;
 		GMRFLib_sprintf(&fnm, "FILE%1d.txt", idx);
 		FILE *fp = fopen(fnm, "w");
-		for(int i = 0; i < 99; i++) {
-			fprintf(fp,  "%f %f\n", xx[i], llxx[i]);
+		for (int i = 0; i < 99; i++) {
+			fprintf(fp, "%f %f\n", xx[i], llxx[i]);
 		}
 		fclose(fp);
 	}
 #endif
-	
+
 	Data_section_tp *ds = (Data_section_tp *) arg;
 	int ny = ds->data_observations.occ_ny[idx];
 
@@ -3202,7 +3201,7 @@ int loglikelihood_occupancy(int thread_id, double *__restrict logll, double *__r
 							double t19 = exp(-t2);
 							double t22 = SQR(-cg + cg * t19 - t19);
 							double c2 =
-								-(-t1 * t4 + t1 * t8 - 2.0 * cg * t8 + t1 * t14 + cg * t4 + t8 - cg * t14) / t22;
+							    -(-t1 * t4 + t1 * t8 - 2.0 * cg * t8 + t1 * t14 + cg * t4 + t8 - cg * t14) / t22;
 							logll[i] = c0 + dx * (c1 + 0.5 * c2 * dx);
 						}
 					}
@@ -3393,7 +3392,7 @@ int loglikelihood_binomialmix(int thread_id, double *__restrict logll, double *_
 	int nbeta = 2 * mm + 1;
 	double y = ds->data_observations.y[idx];
 	double *dat = ds->data_observations.binmix_dat[idx];
-	double n = dat[nbeta + 4];		      
+	double n = dat[nbeta + 4];
 	double ny = n - y;
 
 	if (ISZERO(y) && ISZERO(n)) {
@@ -5858,9 +5857,9 @@ int loglikelihood_mix_gaussian(int thread_id, double *__restrict logll, double *
 
 int loglikelihood_mix_core(int thread_id, double *__restrict logll, double *__restrict x, int m, int idx, double *x_vec, double *y_cdf, void *arg,
 			   int (*func_quadrature)(int, double **, double **, int *, void *arg),
-			   int (*func_simpson)(int, double **, double **, int *, void *arg), char **arg_str)
+			   int(*func_simpson)(int, double **, double **, int *, void *arg), char **arg_str)
 {
-	Data_section_tp *ds = (Data_section_tp *) arg;
+	Data_section_tp *ds =(Data_section_tp *) arg;
 	if (m == 0) {
 		if (arg) {
 			return (ds->mix_loglikelihood(thread_id, NULL, NULL, 0, 0, NULL, NULL, arg, arg_str));
