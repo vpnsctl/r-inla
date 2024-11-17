@@ -597,7 +597,7 @@ int inla_read_data_likelihood(inla_tp *mb, dictionary *UNUSED(ini), int UNUSED(s
 
 	case L_BINOMIALMIX:
 	{
-		assert(ncol_data_all == 16);
+		assert(ncol_data_all <= BINOMIALMIX_NBETA + 7);
 		idiv = ncol_data_all;
 		na = ncol_data_all - 2;
 		for (i = 0; i < na; i++) {
@@ -714,6 +714,7 @@ int inla_read_data_likelihood(inla_tp *mb, dictionary *UNUSED(ini), int UNUSED(s
 	if (ds->data_id == L_BINOMIALMIX) {
 		// re-arrange data so they become more accessible
 		ds->data_observations.binmix_dat = Calloc(mb->predictor_ndata, double *);
+		ds->data_observations.binmix_m = (int) (na - 5) / 2L;
 		for (i = 0; i < mb->predictor_ndata; i++) {
 			ds->data_observations.binmix_dat[i] = Calloc(na, double);
 			for (k = 0; k < na; k++) {
@@ -3388,9 +3389,11 @@ int loglikelihood_binomialmix(int thread_id, double *__restrict logll, double *_
 	}
 
 	Data_section_tp *ds = (Data_section_tp *) arg;
+	int mm = ds->data_observations.binmix_m;
+	int nbeta = 2 * mm + 1;
 	double y = ds->data_observations.y[idx];
 	double *dat = ds->data_observations.binmix_dat[idx];
-	double n = dat[BINOMIALMIX_NBETA + 4];		       /* z_1, ..., z_11, w_1, w_2 */
+	double n = dat[nbeta + 4];		      
 	double ny = n - y;
 
 	if (ISZERO(y) && ISZERO(n)) {
@@ -3410,24 +3413,24 @@ int loglikelihood_binomialmix(int thread_id, double *__restrict logll, double *_
 	double normc = G_norm_const[idx];
 	LINK_INIT;
 
-	double beta[BINOMIALMIX_NBETA];
-	for (int i = 0; i < BINOMIALMIX_NBETA; i++) {
+	double beta[nbeta];
+	for (int i = 0; i < nbeta; i++) {
 		beta[i] = ds->data_observations.binmix_beta[i][thread_id][0];
 	}
-	double beta9 = beta[BINOMIALMIX_NBETA - 1];
+	double beta_common = beta[nbeta - 1];
 
-	int nbeta2 = BINOMIALMIX_NBETA / 2L;
-	double p1_intern = beta9 * dat[BINOMIALMIX_NBETA - 1] + GMRFLib_ddot(nbeta2, beta, dat);
-	double p2_intern = beta9 * dat[BINOMIALMIX_NBETA + 0] + GMRFLib_ddot(nbeta2, beta + nbeta2, dat + nbeta2);
+	int nbeta2 = nbeta / 2L;
+	double p1_intern = beta_common * dat[nbeta - 1] + (nbeta2 > 0 ? GMRFLib_ddot(nbeta2, beta, dat) : 0.0);
+	double p2_intern = beta_common * dat[nbeta + 0] + (nbeta2 > 0 ? GMRFLib_ddot(nbeta2, beta + nbeta2, dat + nbeta2) : 0.0);
 	double p1 = PREDICTOR_INVERSE_LINK_NO_SCALE(p1_intern);
 	double p2 = PREDICTOR_INVERSE_LINK_NO_SCALE(p2_intern);
-	double w1 = dat[BINOMIALMIX_NBETA + 2];
-	double w2 = dat[BINOMIALMIX_NBETA + 3];
+	double w1 = dat[nbeta + 2];
+	double w2 = dat[nbeta + 3];
 	double p12 = w1 * p1 + w2 * p2;
 	double w3 = 1.0 - (w1 + w2);
 	assert(w3 >= 0 && w3 <= 1.0);
 
-	double offset = off + beta9 * dat[BINOMIALMIX_NBETA + 1];
+	double offset = off + beta_common * dat[nbeta + 1];
 	if (m > 0) {
 		if (ISZERO(y)) {
 #pragma omp simd
