@@ -154,10 +154,10 @@ int GMRFLib_2order_approx(int thread_id, double *a, double *b, double *c, double
 	if (INVALID(ddf)) {
 		if (give_warning_c == 0) {
 			fprintf(stderr, " *** WARNING *** GMRFLib_2order_approx: rescue NAN/INF values in logl for idx=%1d\n", idx);
-		} 
+		}
 #pragma omp critical
 		give_warning_c++;
-		
+
 		f0 = df = 0.0;
 		ddf = -1.0;				       /* we try with this */
 		if (dd) {
